@@ -1,0 +1,5 @@
+socket.emit => 1 - 1
+
+io.emit => 1 - n
+
+socket.broadcast.emit => 1 - (n - 1)
