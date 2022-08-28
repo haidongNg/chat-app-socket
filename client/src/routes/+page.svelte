@@ -1,56 +1,82 @@
 <script lang="ts">
-    import {socketClient} from '$lib/realtime';
-    import {onMount} from 'svelte';
+	import { ENDPOINT } from '$lib/realtime';
+	import { onMount } from 'svelte';
+	import '../app.css';
 
-    let textField = "";
-    let username = "";
-    let messages: any[] = [];
+	let textField = '';
+	let username = '';
+	let messages: any[] = [];
+	let conn: WebSocket;
+	onMount(() => {
+		console.log('the component has mounted');
+		if (window['WebSocket']) {
+			conn = new WebSocket(ENDPOINT + 'global');
+			console.log(messages);
+			conn.onmessage = (evt) => {
+				console.log(evt)
+				const data = { message: evt.data, from: 'asdasd', time: '123123' };
+				messages = [...messages, data];
+			};
+		}
+	});
 
-    onMount(() => {
-        socketClient.on("message", message => { // Listen to the message event
-            console.log('1')
-            console.log(message)
-            messages = [...messages, message]
-        })
-    })
-    function sendMessage() {
-        const message = textField.trim();
-        if(!message) return;
+	// Send
+	function sendMessage() {
+		if (!conn) return;
 
-        textField = "";
-        socketClient.emit("message", message); // Send the message
-}
+		const message = textField.trim() + username;
+
+		if (!message) return;
+
+		textField = '';
+		// Send the message
+		conn.send(message);
+	}
 </script>
 
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<div class="bg-[#F2F5F8] p-12 h-screen w-screen text-[#434651]">
+	<input type="text" bind:value="{username}">
+	<div class="p-8 max-h-96 overflow-auto">
+		{#each messages as message}
+			<div
+				class="bg-[#86BB71] border rounded-md p-2 m-2 after:content-[' '] after:clear-both after:table"
+			>
+				<img
+					class="h-12 w-12 rounded-full float-left mr-5"
+					src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+					alt=""
+				/>
+				<p>{message.message}</p>
+				<span class="float-right">11:00</span>
+			</div>
+		{/each}
+		<!-- <div
+			class="bg-[#94C2ED] border rounded-md p-2 m-2 after:content-[' '] after:clear-both after:table"
+		>
+			<img
+				class="h-12 w-12 rounded-full float-right  mr-0 ml-5"
+				src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+				alt=""
+			/>
+			<p>Hello. How are you today?</p>
+			<span class="float-left">11:00</span>
+		</div> -->
+	</div>
 
-<div class="h-screen w-screen bg-zinc-800">
-    <div class="h-full w-full max-w-md mx-auto bg-zinc-500 flex flex-col">
-
-        <header class="px-6 py-4 border-b border-zinc-800 bg-zinc-700 text-white shrink-0 flex items-center justify-between">
-            <span class="font-bold text-xl">My Chat app</span>
-            <span>{username}</span>
-        </header>
-
-        <div class="h-full w-full p-4">
-            {#each messages as message}
-                <div class="bg-zinc-300 rounded-xl rounded-tl-none px-4 py-3 my-4 w-fit">
-                    <span class="flex items-center space-between gap-4">
-                        <b>{message.from}</b>
-                        <i>{message.time}</i>
-                    </span>
-                    {message.message}
-                </div>
-            {/each}
-        </div>
-
-        <form action="#" on:submit|preventDefault={sendMessage}
-            class="px-6 py-4 border-t border-zinc-800 bg-zinc-700 text-white shrink-0 flex items-center"
-        >
-            <input type="text" bind:value={textField} placeholder="Type something..." class="bg-transparent border-none px-4 py-3 w-full" />
-            <button type="submit" class="shrink-0 border border-white rounded-lg px-4 py-3">Send</button>
-        </form>
-
-    </div>
+	<form on:submit|preventDefault={sendMessage} class="p-8">
+		<textarea
+			class="w-full border-none outline-none py-2 px-5 mb-2 rounded-md resize-none"
+			name=""
+			id=""
+			cols="30"
+			rows="10"
+			placeholder="Type your message"
+			bind:value="{textField}"
+		/>
+		<button
+			class="text-[#94C2ED] bg-[#F2F5F8] hover:text-[#94C2ED] float-right uppercase border-none cursor-pointer font-bold "
+			>Send</button
+		>
+	</form>
 </div>
+
