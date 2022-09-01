@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { ENDPOINT } from '$lib/realtime';
 	import { onMount } from 'svelte';
-	import '../app.css';
+	import '../../app.css';
 
 	let textField = '';
 	let username = '';
@@ -10,7 +10,8 @@
 	onMount(() => {
 		console.log('the component has mounted');
 		if (window['WebSocket']) {
-			conn = new WebSocket(ENDPOINT + 'global');
+			conn = new WebSocket(ENDPOINT + 'global/'+'123');
+			console.log(messages);
 			conn.onmessage = (evt) => {
 				console.log(evt)
 				const data = { message: evt.data, from: 'asdasd', time: '123123' };
@@ -34,7 +35,6 @@
 </script>
 
 <div class="bg-[#F2F5F8] p-12 h-screen w-screen text-[#434651]">
-	<a href="/room">Room my site</a>
 	<input type="text" placeholder="Username" bind:value="{username}">
 	<div class="p-8 max-h-96 overflow-auto">
 		{#each messages as message}
