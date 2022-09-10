@@ -36,8 +36,17 @@ func main() {
 	go hub.Run()
 
 	app.Get("/ws/global", websocket.New(func(c *websocket.Conn) {
-		hub.Register <- c
-		ReadMessage(c, hub)
+
+		client := &Client{
+			Conn:     c,
+			RoomId:   c.Query("roomId"),
+			ClientId: c.Query("clientId"),
+			Message:  make(chan *Message, 10),
+		}
+		// Register
+		hub.Register <- client
+
+		client.ReadMessage(hub)
 	}))
 	log.Fatal(app.Listen(":3000"))
 }
