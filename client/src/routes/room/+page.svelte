@@ -11,9 +11,7 @@
 		console.log('the component has mounted');
 		if (window['WebSocket']) {
 			conn = new WebSocket(ENDPOINT + 'global/'+'123');
-			console.log(messages);
 			conn.onmessage = (evt) => {
-				console.log(evt)
 				const data = { message: evt.data, from: 'asdasd', time: '123123' };
 				messages = [...messages, data];
 			};

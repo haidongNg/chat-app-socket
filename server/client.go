@@ -36,14 +36,14 @@ type Client struct {
 }
 
 // from webscoket Connections to Hub
-func ReadMessage(c *websocket.Conn, h *Hub) {
+func (c *Client) ReadMessage(h *Hub) {
 	defer func() {
 		h.Unregister <- c
 		c.Conn.Close()
 	}()
 
 	for {
-		messageType, message, err := c.ReadMessage()
+		messageType, message, err := c.Conn.ReadMessage()
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 				log.Println("read error:", err)
@@ -52,9 +52,14 @@ func ReadMessage(c *websocket.Conn, h *Hub) {
 			return // Calls the deferred function, i.e. closes the connection on error
 		}
 
+		msg := Message{
+			Message:  string(message),
+			ClientId: c.ClientId,
+			RoomId:   c.RoomId,
+		}
 		if messageType == websocket.TextMessage {
 			// Broadcast the received message
-			h.Broadcast <- string(message)
+			h.Broadcast <- &msg
 		} else {
 			log.Println("websocket message received of type", messageType)
 		}
