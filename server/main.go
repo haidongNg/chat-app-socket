@@ -10,11 +10,6 @@ import (
 	"github.com/gofiber/websocket/v2"
 )
 
-// var clients = make(map[*websocket.Conn]Client) // Note: although large maps with pointer-like types (e.g. strings) as keys are slow, using pointers themselves as keys is acceptable and fast
-// var register = make(chan *websocket.Conn)
-// var broadcast = make(chan string)
-// var unregister = make(chan *websocket.Conn)
-
 func main() {
 	app := fiber.New()
 	hub := NewHub()
@@ -36,17 +31,7 @@ func main() {
 	go hub.Run()
 
 	app.Get("/ws/global", websocket.New(func(c *websocket.Conn) {
-
-		client := &Client{
-			Conn:     c,
-			RoomId:   c.Query("roomId"),
-			ClientId: c.Query("clientId"),
-			Message:  make(chan *Message, 10),
-		}
-		// Register
-		hub.Register <- client
-
-		client.ReadMessage(hub)
+		serveWs(hub, c)
 	}))
 	log.Fatal(app.Listen(":3000"))
 }

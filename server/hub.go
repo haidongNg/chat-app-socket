@@ -2,8 +2,6 @@ package main
 
 import (
 	"log"
-
-	"github.com/gofiber/websocket/v2"
 )
 
 type Hub struct {
@@ -43,20 +41,29 @@ func (h *Hub) Run() {
 
 		case client := <-h.Unregister:
 			// Remove the client from the hub
-			delete(h.Rooms[client.RoomId].Clients, client.ClientId)
-			log.Println("connection unregistered")
+			if _, isCLientExist := h.Rooms[client.RoomId].Clients[client.ClientId]; isCLientExist {
+				log.Println("delete connection")
+				if len(h.Rooms[client.RoomId].Clients) != 0 {
+					h.Broadcast <- &Message{
+						Message:  "disconnect user",
+						ClientId: client.ClientId,
+						RoomId:   client.RoomId,
+					}
+				}
+				delete(h.Rooms[client.RoomId].Clients, client.ClientId)
+				close(client.Message)
+			}
+
+			// remove room if no one clinet
+			clients := h.Rooms[client.RoomId].Clients
+			if len(clients) == 0 {
+				delete(h.Rooms, client.RoomId)
+			}
 
 		case message := <-h.Broadcast:
 			// Message
 			if _, exist := h.Rooms[message.RoomId]; exist {
 				for _, room := range h.Rooms[message.RoomId].Clients {
-					if err := room.Conn.WriteMessage(websocket.TextMessage, []byte(message.Message)); err != nil {
-						log.Println("write error:", err)
-
-						room.Conn.WriteMessage(websocket.CloseMessage, []byte{})
-						room.Conn.Close()
-						delete(h.Rooms[room.RoomId].Clients, message.ClientId)
-					}
 					if room.RoomId == message.RoomId {
 						// Send client
 						room.Message <- message
