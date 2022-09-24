@@ -2,7 +2,7 @@
 </script>
 
 <div
-    class="h-14 bg-indigo-100 flex items-center justify-between p-2 text-indigo-700"
+    class="h-14 bg-indigo-100 flex items-center justify-between p-2 text-indigo-700 rounded-t-lg"
 >
     <span>Jane</span>
     <div class="flex gap-2">

@@ -1,7 +1,8 @@
 <script>
-    import "../../app.css";
 </script>
-
+<svelte:head>
+    <title>Register</title>
+</svelte:head>
 <div class="h-full w-full flex justify-center items-center bg-indigo-300">
     <div
         class="bg-white shadow-lg py-5 px-10 border rounded-lg flex flex-col gap-2 items-center"

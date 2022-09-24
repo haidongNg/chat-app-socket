@@ -11,9 +11,9 @@
         />
         <span>Just now{owner}</span>
     </div>
-    <div class="max-w-[50%] flex flex-col gap-2 {owner ? 'items-end' : ''}">
+    <div class="max-w-[50%] flex flex-col gap-3 {owner ? 'items-end' : ''}">
         <p
-            class="py-2 px-5 bg-white rounded-lg max-w-max {owner
+            class="py-3 px-5 bg-white rounded-lg max-w-max {owner
                 ? 'rounded-tr-none'
                 : 'rounded-tl-none'}"
         >

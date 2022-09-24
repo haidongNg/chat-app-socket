@@ -1,4 +1,8 @@
-<script></script>
+<script>
+    import { user } from "../stores/user";
+    import { get } from "svelte/store";
+    let rUser = get(user);
+</script>
 
 <!-- <div class="flex items-center bg-indigo-500 h-14 p-3 justify-between text-white">
     <span class="font-bold">Chat</span>
@@ -40,7 +44,7 @@
             class="h-full w-full"
         />
     </div>
-    <div class="text-sm font-semibold mt-2">Aminos Co.</div>
+    <div class="text-sm font-semibold mt-2">{rUser.email}</div>
     <div class="text-xs text-gray-500">Lead UI/UX Designer</div>
     <div class="flex flex-row items-center mt-3">
         <div

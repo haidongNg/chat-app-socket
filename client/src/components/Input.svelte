@@ -1,6 +1,6 @@
 <script></script>
 
-<div class="h-14 bg-white p-3 gap-2 flex items-center justify-between">
+<div class="h-14 bg-indigo-100 p-3 gap-2 flex items-center justify-between rounded-b-lg">
     <div>
         <button
             class="flex items-center justify-center text-gray-400 hover:text-gray-600"

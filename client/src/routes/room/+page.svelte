@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { ENDPOINT } from "$lib/realtime";
 	import { onMount } from "svelte";
-	import "../../app.css";
 	let textField = "";
 	let username =
 		Date.now().toString(36) + Math.random().toString(36).substr(2);
