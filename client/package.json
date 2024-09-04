@@ -20,7 +20,7 @@
 		"autoprefixer": "10.4.12",
 		"eslint": "8.23.1",
 		"eslint-plugin-svelte3": "4.0.0",
-		"postcss": "8.4.16",
+		"postcss": "8.4.45",
 		"svelte": "3.50.1",
 		"svelte-check": "2.9.0",
 		"svelte-preprocess": "4.10.7",
