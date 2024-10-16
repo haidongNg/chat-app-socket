@@ -12,7 +12,7 @@
 		"lint": "eslint ."
 	},
 	"devDependencies": {
-		"@playwright/test": "1.26.0",
+		"@playwright/test": "1.48.1",
 		"@sveltejs/adapter-auto": "next",
 		"@sveltejs/kit": "next",
 		"@typescript-eslint/eslint-plugin": "5.38.0",
